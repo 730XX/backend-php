@@ -1,0 +1,30 @@
+# Variables de entorno sensibles
+.env
+
+# Logs
+logs/
+*.log
+
+# Composer
+/vendor/
+composer.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporal
+temp/
+tmp/
+cache/
+
+# Backup
+*.bak
+*.backup

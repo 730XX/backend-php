@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Habilitar seguimiento de enlaces simbólicos
+Options +FollowSymLinks
+
+# Evita reescribir si el archivo o directorio existe físicamente
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirige todo lo demás a index.php
+RewriteRule ^ index.php [QSA,L]

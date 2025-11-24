@@ -1,0 +1,961 @@
+{
+  "info": {
+    "name": "Inventario API - CRUD Completo",
+    "description": "API REST con CRUD de Productos, Movimientos y Usuarios, autenticación por API Key",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "inventario-api-crud",
+    "version": "3.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost/Proyecto-final/backend-inventario/api/rest/inventario"
+    },
+    {
+      "key": "api_key_master",
+      "value": "sk_live_master_2024_XyZ123AbC456"
+    },
+    {
+      "key": "api_key_admin",
+      "value": "sk_live_admin_2024_DeF789GhI012"
+    },
+    {
+      "key": "api_key_client",
+      "value": "sk_live_client_2024_JkL345MnO678"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Health Check (Público)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/",
+          "host": ["{{base_url}}"],
+          "path": [""]
+        },
+        "description": "Verifica que la API está funcionando. No requiere API Key."
+      },
+      "response": []
+    },
+    {
+      "name": "02 - GET Kardex - Sin API Key (ERROR)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Intento de acceso sin API Key. Debe retornar 401."
+      },
+      "response": []
+    },
+    {
+      "name": "03 - GET Kardex - Con API Key MASTER",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Lista todos los movimientos de inventario usando API Key MASTER"
+      },
+      "response": []
+    },
+    {
+      "name": "04 - GET Kardex - Con API Key ADMIN",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_admin}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Lista todos los movimientos usando API Key ADMIN"
+      },
+      "response": []
+    },
+    {
+      "name": "05 - GET Kardex - Con API Key Inválida (ERROR)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "clave_incorrecta_123",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Intento con API Key inválida. Debe retornar 401."
+      },
+      "response": []
+    },
+    {
+      "name": "06 - GET Kardex por ID - Exitoso",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/kardex/1",
+          "host": ["{{base_url}}"],
+          "path": ["kardex", "1"]
+        },
+        "description": "Obtiene un movimiento específico por su ID"
+      },
+      "response": []
+    },
+    {
+      "name": "07 - GET Kardex por ID - No Encontrado (404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/kardex/999",
+          "host": ["{{base_url}}"],
+          "path": ["kardex", "999"]
+        },
+        "description": "Intenta obtener un movimiento que no existe. Debe retornar 404."
+      },
+      "response": []
+    },
+    {
+      "name": "08 - GET Kardex por ID - ID Inválido (400)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/kardex/abc",
+          "host": ["{{base_url}}"],
+          "path": ["kardex", "abc"]
+        },
+        "description": "Intenta obtener un movimiento con ID inválido. Debe retornar 400."
+      },
+      "response": []
+    },
+    {
+      "name": "09 - POST Kardex - Crear Movimiento ENTRADA",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_id\": 1,\n  \"movimientos_tipo\": \"ENTRADA\",\n  \"movimientos_cantidad\": 10,\n  \"movimientos_motivo\": \"Compra a proveedor\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Registra una ENTRADA de inventario"
+      },
+      "response": []
+    },
+    {
+      "name": "10 - POST Kardex - Crear Movimiento SALIDA",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_id\": 1,\n  \"movimientos_tipo\": \"SALIDA\",\n  \"movimientos_cantidad\": 5,\n  \"movimientos_motivo\": \"Venta\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Registra una SALIDA de inventario"
+      },
+      "response": []
+    },
+    {
+      "name": "11 - POST Kardex - Sin API Key (ERROR)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_id\": 1,\n  \"movimientos_tipo\": \"ENTRADA\",\n  \"movimientos_cantidad\": 10,\n  \"movimientos_motivo\": \"Test sin key\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Intento de crear movimiento sin API Key. Debe retornar 401."
+      },
+      "response": []
+    },
+    {
+      "name": "12 - POST Kardex - Validación (Campo Faltante)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_id\": 1,\n  \"movimientos_tipo\": \"ENTRADA\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Prueba validación: falta campo movimientos_cantidad"
+      },
+      "response": []
+    },
+    {
+      "name": "13 - POST Kardex - Validación (Cantidad Negativa)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_id\": 1,\n  \"movimientos_tipo\": \"ENTRADA\",\n  \"movimientos_cantidad\": -10,\n  \"movimientos_motivo\": \"Test negativo\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/kardex",
+          "host": ["{{base_url}}"],
+          "path": ["kardex"]
+        },
+        "description": "Prueba validación: cantidad negativa"
+      },
+      "response": []
+    },
+    {
+      "name": "14 - PUT Kardex/:id - Actualizar (Éxito)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movimientos_tipo\": \"ENTRADA\",\n  \"movimientos_cantidad\": 30,\n  \"movimientos_motivo\": \"Compra actualizada\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/kardex/1",
+          "host": ["{{base_url}}"],
+          "path": ["kardex", "1"]
+        },
+        "description": "Actualizar movimiento existente con recálculo de stock"
+      },
+      "response": []
+    },
+    {
+      "name": "15 - PUT Kardex/:id - Actualizar Parcial (Solo Motivo)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movimientos_motivo\": \"Motivo actualizado\",\n  \"movimientos_comentario\": \"Sin cambio de stock\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/kardex/1",
+          "host": ["{{base_url}}"],
+          "path": ["kardex", "1"]
+        },
+        "description": "Actualizar solo campos que no afectan stock"
+      },
+      "response": []
+    },
+    {
+      "name": "16 - PUT Kardex/:id - ID Inexistente (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"movimientos_cantidad\": 10\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/kardex/9999",
+          "host": ["{{base_url}}"],
+          "path": ["kardex", "9999"]
+        },
+        "description": "Intentar actualizar movimiento que no existe"
+      },
+      "response": []
+    },
+    {
+      "name": "17 - GET Productos - Listar Todos (Éxito)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/productos",
+          "host": ["{{base_url}}"],
+          "path": ["productos"]
+        },
+        "description": "Listar todos los productos activos"
+      },
+      "response": []
+    },
+    {
+      "name": "18 - GET Productos/:id - Obtener por ID (Éxito)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/productos/1",
+          "host": ["{{base_url}}"],
+          "path": ["productos", "1"]
+        },
+        "description": "Obtener producto específico por ID"
+      },
+      "response": []
+    },
+    {
+      "name": "19 - GET Productos/:id - ID Inexistente (404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/productos/9999",
+          "host": ["{{base_url}}"],
+          "path": ["productos", "9999"]
+        },
+        "description": "Buscar producto que no existe"
+      },
+      "response": []
+    },
+    {
+      "name": "20 - POST Productos - Crear (Éxito)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_nombre\": \"Café Molido Premium\",\n  \"productos_codigo\": \"CAF001\",\n  \"productos_unidad\": \"KG\",\n  \"productos_precio\": 12.50,\n  \"productos_stock\": 50\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/productos",
+          "host": ["{{base_url}}"],
+          "path": ["productos"]
+        },
+        "description": "Crear un nuevo producto"
+      },
+      "response": []
+    },
+    {
+      "name": "21 - POST Productos - Validación (Nombre Corto)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_nombre\": \"AB\",\n  \"productos_precio\": 10\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/productos",
+          "host": ["{{base_url}}"],
+          "path": ["productos"]
+        },
+        "description": "Validación: nombre muy corto (menos de 3 caracteres)"
+      },
+      "response": []
+    },
+    {
+      "name": "22 - POST Productos - Validación (Precio Negativo)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_nombre\": \"Producto Test\",\n  \"productos_precio\": -5.00\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/productos",
+          "host": ["{{base_url}}"],
+          "path": ["productos"]
+        },
+        "description": "Validación: precio negativo"
+      },
+      "response": []
+    },
+    {
+      "name": "23 - POST Productos - Validación (Unidad Inválida)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_nombre\": \"Producto Test\",\n  \"productos_unidad\": \"INVALIDA\",\n  \"productos_precio\": 10\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/productos",
+          "host": ["{{base_url}}"],
+          "path": ["productos"]
+        },
+        "description": "Validación: unidad no permitida (debe ser UND, KG, LT, MTS)"
+      },
+      "response": []
+    },
+    {
+      "name": "24 - PUT Productos/:id - Actualizar (Éxito)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_precio\": 15.00,\n  \"productos_unidad\": \"LT\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/productos/1",
+          "host": ["{{base_url}}"],
+          "path": ["productos", "1"]
+        },
+        "description": "Actualizar precio y unidad de un producto"
+      },
+      "response": []
+    },
+    {
+      "name": "25 - PUT Productos/:id - ID Inexistente (404)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productos_precio\": 10\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/productos/9999",
+          "host": ["{{base_url}}"],
+          "path": ["productos", "9999"]
+        },
+        "description": "Intentar actualizar producto que no existe"
+      },
+      "response": []
+    },
+    {
+      "name": "26 - PUT Productos/:id/estado - Desactivar (Éxito)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/productos/7/estado",
+          "host": ["{{base_url}}"],
+          "path": ["productos", "7", "estado"]
+        },
+        "description": "Desactivar producto (soft delete). Solo si no tiene movimientos."
+      },
+      "response": []
+    },
+    {
+      "name": "27 - PUT Productos/:id/estado - Con Movimientos (ERROR)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/productos/1/estado",
+          "host": ["{{base_url}}"],
+          "path": ["productos", "1", "estado"]
+        },
+        "description": "Intentar desactivar producto que tiene movimientos asociados"
+      },
+      "response": []
+    },
+    {
+      "name": "28 - GET Usuarios (Éxito)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/usuarios",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios"]
+        },
+        "description": "Listar todos los usuarios activos"
+      },
+      "response": []
+    },
+    {
+      "name": "29 - GET Usuarios/:id (Éxito)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/usuarios/1",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios", "1"]
+        },
+        "description": "Obtener usuario por ID"
+      },
+      "response": []
+    },
+    {
+      "name": "30 - GET Usuarios/:id - No Existe (ERROR)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/usuarios/9999",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios", "9999"]
+        },
+        "description": "Intentar obtener usuario inexistente"
+      },
+      "response": []
+    },
+    {
+      "name": "31 - POST Usuarios - Crear (Éxito)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarios_nombre\": \"María González\",\n  \"usuarios_correo\": \"maria@test.com\",\n  \"usuarios_password\": \"password123\",\n  \"usuarios_rol\": \"ALMACENERO\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/usuarios",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios"]
+        },
+        "description": "Crear nuevo usuario con datos válidos"
+      },
+      "response": []
+    },
+    {
+      "name": "32 - POST Usuarios - Nombre Corto (ERROR)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarios_nombre\": \"AB\",\n  \"usuarios_correo\": \"test@test.com\",\n  \"usuarios_password\": \"123456\",\n  \"usuarios_rol\": \"ADMIN\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/usuarios",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios"]
+        },
+        "description": "Intentar crear usuario con nombre menor a 3 caracteres"
+      },
+      "response": []
+    },
+    {
+      "name": "33 - POST Usuarios - Correo Inválido (ERROR)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarios_nombre\": \"Pedro López\",\n  \"usuarios_correo\": \"correo-invalido\",\n  \"usuarios_password\": \"123456\",\n  \"usuarios_rol\": \"ADMIN\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/usuarios",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios"]
+        },
+        "description": "Intentar crear usuario con formato de correo inválido"
+      },
+      "response": []
+    },
+    {
+      "name": "34 - POST Usuarios - Password Corto (ERROR)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarios_nombre\": \"Carlos Ruiz\",\n  \"usuarios_correo\": \"carlos@test.com\",\n  \"usuarios_password\": \"123\",\n  \"usuarios_rol\": \"ADMIN\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/usuarios",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios"]
+        },
+        "description": "Intentar crear usuario con contraseña menor a 6 caracteres"
+      },
+      "response": []
+    },
+    {
+      "name": "35 - POST Usuarios - Rol Inválido (ERROR)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarios_nombre\": \"Ana Torres\",\n  \"usuarios_correo\": \"ana@test.com\",\n  \"usuarios_password\": \"123456\",\n  \"usuarios_rol\": \"VENDEDOR\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/usuarios",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios"]
+        },
+        "description": "Intentar crear usuario con rol no permitido"
+      },
+      "response": []
+    },
+    {
+      "name": "36 - POST Usuarios - Correo Duplicado (ERROR)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarios_nombre\": \"Usuario Duplicado\",\n  \"usuarios_correo\": \"admin@restaurant.pe\",\n  \"usuarios_password\": \"123456\",\n  \"usuarios_rol\": \"ADMIN\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/usuarios",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios"]
+        },
+        "description": "Intentar crear usuario con correo ya registrado"
+      },
+      "response": []
+    },
+    {
+      "name": "37 - PUT Usuarios/:id - Actualizar (Éxito)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"usuarios_nombre\": \"María González Actualizada\",\n  \"usuarios_rol\": \"ADMIN\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/usuarios/3",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios", "3"]
+        },
+        "description": "Actualizar datos de usuario existente"
+      },
+      "response": []
+    },
+    {
+      "name": "38 - PUT Usuarios/:id/estado - Desactivar (Éxito)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{api_key_master}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/usuarios/3/estado",
+          "host": ["{{base_url}}"],
+          "path": ["usuarios", "3", "estado"]
+        },
+        "description": "Desactivar usuario (soft delete)"
+      },
+      "response": []
+    }
+  ]
+}

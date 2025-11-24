@@ -1,0 +1,26 @@
+{
+    "name": "restaurant-pe/inventario-api",
+    "description": "API REST Modulo Inventario - Slim 2 Legacy",
+    "type": "project",
+    "config": {
+        "platform": {
+            "php": "7.1.33"
+        },
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        },
+        "platform-check": false
+    },
+    "require": {
+        "php": "^7.1",
+        "slim/slim": "2.*",
+        "phpoffice/phpspreadsheet": "1.8.2",
+        "vlucas/phpdotenv": "^2.6",
+        "monolog/monolog": "^1.25"
+    },
+    "autoload": {
+        "psr-4": {
+            "Inventario\\": "api/rest/inventario/src/"
+        }
+    }
+}
