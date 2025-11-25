@@ -31,7 +31,7 @@ $app = new \Slim\Slim([
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, X-API-Key, x-api-key, Authorization');
+    header('Access-Control-Allow-Headers: Content-Type, X-API-Key, x-api-key, X-User-Id, Authorization');
     header('Access-Control-Max-Age: 86400');
     http_response_code(200);
     exit;
@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $app->hook('slim.before', function() use ($app) {
     $app->response->headers->set('Access-Control-Allow-Origin', '*');
     $app->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    $app->response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-API-Key, x-api-key, Authorization');
-    $app->response->headers->set('Access-Control-Expose-Headers', 'Content-Type, X-API-Key');
+    $app->response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-API-Key, x-api-key, X-User-Id, Authorization');
+    $app->response->headers->set('Access-Control-Expose-Headers', 'Content-Type, X-API-Key, X-User-Id');
 });
 
 // Configuración de respuesta JSON
