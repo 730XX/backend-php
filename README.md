@@ -426,6 +426,6 @@ Para dudas o problemas:
 
 Proyecto Final - Curso de Desarrollo Backend con Slim Framework
 
-**Desarrollado por:** [Tu Nombre]  
-**Fecha:** Noviembre 2025  
+**Desarrollado por:** [Elder Cardoza]  
+**Fecha:** 24 Noviembre 2025  
 **Versión:** 1.0.0
