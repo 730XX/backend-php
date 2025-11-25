@@ -147,8 +147,9 @@ class ProductosController
     }
 
     /**
-     * PUT: Cambiar estado del producto a inactivo (soft delete)
+     * PUT: Cambiar estado del producto (activar/desactivar)
      * Endpoint: PUT /productos/:id/estado
+     * Body: { "productos_estado": 0 | 1 }
      */
     public function cambiarEstado($id)
     {
@@ -163,13 +164,39 @@ class ProductosController
                 return;
             }
 
-            // 2. PROCESO DE NEGOCIO (Capa Service)
-            $this->service->cambiarEstado($id, 0);
+            // 2. Obtener datos del body
+            $body = $this->app->request->getBody();
+            $data = json_decode($body, true);
 
-            // 3. Respuesta Exitosa (200 OK)
+            if (!$data || !isset($data['productos_estado'])) {
+                $response = ResponseHelper::error(
+                    ['El campo productos_estado es obligatorio'],
+                    null
+                );
+                ResponseHelper::send($this->app, $response, 400);
+                return;
+            }
+
+            $nuevoEstado = (int)$data['productos_estado'];
+
+            // Validar que el estado sea 0 o 1
+            if ($nuevoEstado !== 0 && $nuevoEstado !== 1) {
+                $response = ResponseHelper::error(
+                    ['El estado debe ser 0 (inactivo) o 1 (activo)'],
+                    null
+                );
+                ResponseHelper::send($this->app, $response, 400);
+                return;
+            }
+
+            // 3. PROCESO DE NEGOCIO (Capa Service)
+            $this->service->cambiarEstado($id, $nuevoEstado);
+
+            // 4. Respuesta Exitosa (200 OK)
+            $accion = $nuevoEstado === 1 ? 'activado' : 'desactivado';
             $response = ResponseHelper::success(
-                ['producto_id' => $id, 'estado' => 0],
-                ['Producto desactivado exitosamente']
+                ['producto_id' => $id, 'estado' => $nuevoEstado],
+                ["Producto {$accion} exitosamente"]
             );
             ResponseHelper::send($this->app, $response, 200);
         } catch (Exception $e) {

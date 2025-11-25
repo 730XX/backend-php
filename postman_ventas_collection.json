@@ -1,0 +1,331 @@
+{
+  "info": {
+    "name": "Módulo de Ventas - API Tests",
+    "description": "Colección de pruebas para el módulo de ventas con actualización automática de inventario",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost/Proyecto-final/backend-inventario/api/rest/inventario"
+    },
+    {
+      "key": "apiKey",
+      "value": "sk_live_master_2024_XyZ123AbC456"
+    },
+    {
+      "key": "userId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        }
+      }
+    },
+    {
+      "name": "✅ Venta Exitosa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{userId}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"productos_id\": 1,\n      \"cantidad\": 2,\n      \"precio\": 15.50\n    },\n    {\n      \"productos_id\": 2,\n      \"cantidad\": 1.5,\n      \"precio\": 8.00\n    }\n  ],\n  \"cliente_nombre\": \"Juan Pérez\",\n  \"observaciones\": \"Entrega urgente\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "❌ Stock Insuficiente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{userId}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"productos_id\": 1,\n      \"cantidad\": 999999,\n      \"precio\": 15.50\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "❌ Precio Manipulado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{userId}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"productos_id\": 1,\n      \"cantidad\": 2,\n      \"precio\": 0.01\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "❌ Producto Inexistente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{userId}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"productos_id\": 99999,\n      \"cantidad\": 1,\n      \"precio\": 10.00\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "❌ Sin Header X-User-Id",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"productos_id\": 1,\n      \"cantidad\": 1,\n      \"precio\": 15.50\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "❌ Items Vacío",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{userId}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": []\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "❌ Producto Duplicado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{userId}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"productos_id\": 1,\n      \"cantidad\": 2,\n      \"precio\": 15.50\n    },\n    {\n      \"productos_id\": 1,\n      \"cantidad\": 1,\n      \"precio\": 15.50\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "❌ Cantidad Negativa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{userId}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"productos_id\": 1,\n      \"cantidad\": -5,\n      \"precio\": 15.50\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "❌ Precio Fuera de Rango",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          },
+          {
+            "key": "X-User-Id",
+            "value": "{{userId}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"items\": [\n    {\n      \"productos_id\": 1,\n      \"cantidad\": 1,\n      \"precio\": 9999999.99\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/ventas",
+          "host": ["{{baseUrl}}"],
+          "path": ["ventas"]
+        }
+      }
+    },
+    {
+      "name": "Verificar Kardex (Movimientos)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/kardex",
+          "host": ["{{baseUrl}}"],
+          "path": ["kardex"]
+        }
+      }
+    },
+    {
+      "name": "Verificar Stock Productos",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "{{apiKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/productos",
+          "host": ["{{baseUrl}}"],
+          "path": ["productos"]
+        }
+      }
+    }
+  ]
+}

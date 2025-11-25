@@ -44,11 +44,12 @@ class MovimientosService
      * @return int ID del movimiento creado.
      * @throws Exception Si hay error de negocio o base de datos.
      */
-    public function registrarMovimiento($datos, $usuarioId)
+    public function registrarMovimiento($datos, $usuarioId, $usarTransaccion = true)
     {
-
-        // 1. Iniciamos la Transacción (Punto CRÍTICO de la arquitectura)
-        $this->repository->beginTransaction();
+        // 1. Iniciamos la Transacción SOLO si nos lo piden
+        if ($usarTransaccion) {
+            $this->repository->beginTransaction();
+        }
 
         try {
             // A. Obtener estado actual del producto (Snapshot)
@@ -94,27 +95,37 @@ class MovimientosService
             // Pasamos el $nuevoStock para que quede grabado el saldo histórico
             $idMovimiento = $this->repository->guardarMovimiento($datos, $nuevoStock, $usuarioId);
 
-            // E. Si llegamos aquí sin errores, CONFIRMAMOS los cambios en BD
-            $this->repository->commit();
+            // E. Si llegamos aquí sin errores Y manejamos nuestra propia transacción, CONFIRMAMOS
+            if ($usarTransaccion) {
+                $this->repository->commit();
+            }
 
-            // F. Log de Auditoría Exitoso (Rúbrica Punto 8)
+            // F. Log de Auditoría Exitoso
             $this->logger->info("Movimiento Exitoso", [
                 'id_movimiento' => $idMovimiento,
                 'tipo' => $datos['movimientos_tipo'],
                 'producto' => $producto['productos_nombre'],
-                'usuario' => $usuarioId
+                'usuario' => $usuarioId,
+                'transaccion_propia' => $usarTransaccion
             ]);
 
             return $idMovimiento;
         } catch (Exception $e) {
-            // G. SI ALGO FALLA: Revertimos TODO. (Rollback)
-            // Esto asegura que no se descuadre el inventario.
-            $this->repository->rollBack();
+            // G. SI ALGO FALLA Y manejamos nuestra propia transacción: Revertimos
+            // Si usarTransaccion=false, dejamos que el caller maneje el rollback
+            if ($usarTransaccion) {
+                $this->repository->rollBack();
+            }
 
-            // Logueamos el error técnico si no es una excepción de negocio controlada
-            $this->logger->error("Error en transacción de inventario: " . $e->getMessage());
+            // Logueamos el error técnico
+            $this->logger->error("Error en transacción de inventario", [
+                'error' => $e->getMessage(),
+                'producto_id' => isset($datos['productos_id']) ? $datos['productos_id'] : 'N/A',
+                'usuario_id' => $usuarioId,
+                'transaccion_propia' => $usarTransaccion
+            ]);
 
-            // Relanzamos la excepción para que el Controller responda con error 400/500
+            // Relanzamos la excepción para que el Controller o el caller la maneje
             throw $e;
         }
     }

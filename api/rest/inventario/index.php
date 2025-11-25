@@ -72,9 +72,11 @@ $app->get('/', function() use ($app, $db, $logger) {
             'endpoints' => [
                 'productos' => '/productos (GET, POST, PUT, DELETE)',
                 'movimientos' => '/kardex (GET, POST, PUT)',
-                'usuarios' => '/usuarios (GET)'
+                'usuarios' => '/usuarios (GET)',
+                'ventas' => '/ventas (POST) - Punto de Venta con actualización automática de inventario'
             ],
-            'seguridad' => 'API Key requerida en header X-API-Key'
+            'seguridad' => 'API Key requerida en header X-API-Key',
+            'documentacion' => 'Ver DOCUMENTACION_VENTAS.md para detalles del módulo de ventas'
         ],
         ['API funcionando correctamente', 'Use X-API-Key para acceder a los endpoints protegidos']
     );
@@ -101,6 +103,10 @@ $rutasMovimientos($app, $db, $logger, $protegerRutas);
 // Cargar rutas de Usuarios
 $rutasUsuarios = require __DIR__ . '/routes/usuarios.php';
 $rutasUsuarios($app, $db, $logger, $protegerRutas);
+
+// Cargar rutas de Ventas
+$rutasVentas = require __DIR__ . '/routes/ventas.php';
+$rutasVentas($app, $db, $logger, $protegerRutas);
 
 // Ejecutar la aplicación
 $app->run();
