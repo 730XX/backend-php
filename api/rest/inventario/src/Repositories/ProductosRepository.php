@@ -41,7 +41,7 @@ class ProductosRepository
     // --- MÉTODOS DE CONSULTA ---
 
     /**
-     * Obtener todos los productos activos
+     * Obtener todos los productos (activos e inactivos)
      * @return array Lista de productos
      */
     public function obtenerTodos()
@@ -49,7 +49,6 @@ class ProductosRepository
         $sql = "SELECT productos_id, productos_nombre, productos_codigo, productos_unidad,
                        productos_precio, productos_stock, productos_estado, productos_creado
                 FROM productos 
-                WHERE productos_estado = 1
                 ORDER BY productos_nombre ASC";
         
         $stmt = $this->db->prepare($sql);
@@ -68,7 +67,7 @@ class ProductosRepository
         $sql = "SELECT productos_id, productos_nombre, productos_codigo, productos_unidad,
                        productos_precio, productos_stock, productos_estado, productos_creado
                 FROM productos 
-                WHERE productos_id = :id AND productos_estado = 1";
+                WHERE productos_id = :id";
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $productoId]);
