@@ -108,5 +108,9 @@ $rutasUsuarios($app, $db, $logger, $protegerRutas);
 $rutasVentas = require __DIR__ . '/routes/ventas.php';
 $rutasVentas($app, $db, $logger, $protegerRutas);
 
+// Cargar rutas de Reportes
+$rutasReportes = require __DIR__ . '/routes/reportes.php';
+$rutasReportes($app, $db, $logger, $protegerRutas);
+
 // Ejecutar la aplicación
 $app->run();
